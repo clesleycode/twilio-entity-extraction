@@ -5,12 +5,15 @@ from twilio.twiml.messaging_response import MessagingResponse
 import random 
 
 p = Pocket(
-consumer_key='73820-b7626621174f19626b4f04fe',
-access_token='9bbd62c8-8fa2-f1ce-df16-c1d7c9'
+consumer_key='key-here',
+access_token='key-here'
 )
 
 def get_articles():
-
+"""
+    This function uses the Pocket API to extract all the user's articles and its contents
+    returns article_info, which is a dictionary containing info for each article
+"""
 	api_call = p.get(contentType='article')
 	articles = api_call[0]['list']
 	article_info = {}
@@ -21,7 +24,10 @@ def get_articles():
 
 
 def get_entities(article_info):
-
+"""
+    This function uses SpaCy to extract entities from each article's description
+    returns article_entities, which is a dictionary containing entities for each article
+"""
 	nlp = spacy.load('en')
 	article_entities = {'Default': []}
 
@@ -49,7 +55,7 @@ def sms_reply():
 
 	body = request.values.get('Body', None)
 
-
+	# figures out appropriate response based on user input
 	if len(body) == 0:
  		article = article_entities['Default'][random.randint(0,len(article_entities['Default']))]
 	else:
